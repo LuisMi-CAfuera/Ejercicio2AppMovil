@@ -3,6 +3,9 @@ package com.example.ejercicio2appmovil
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 
 
 //ViewBinding
@@ -15,22 +18,43 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
         binding.button2.setOnClickListener {
-            sumar()
+
+            cont++
+            binding.textView.text = cont.toString()
             binding.editTextTextPersonName.clearFocus()
         }
         binding.button.setOnClickListener {
-            restar()
+            if (cont > 0){
+                cont--
+                binding.textView.text = cont.toString()
+
+            }
             binding.editTextTextPersonName.clearFocus()
         }
 
-        binding.editTextTextPersonName.setOnFocusChangeListener { _, hasFocus ->
-           if (!hasFocus) {
-               binding.textView.text = binding.editTextTextPersonName.text
+        binding.editTextTextPersonName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
-        }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                try {
+                    cont = s.toString().toInt()
+                    binding.textView.text = cont.toString()
+                } catch (e: NumberFormatException) {
+                    binding.editTextTextPersonName.text.clear()
+                    binding.textView.text = "0"
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+
+
 
 
         binding.editTextTextPersonName.setOnFocusChangeListener { _, hasFocus ->
@@ -49,17 +73,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    fun sumar(){
-        cont++
-        binding.textView.text = cont.toString()
-    }
 
-    fun restar(){
-        if (cont > 0){
-            cont--
-            binding.textView.text = cont.toString()
-        }
-    }
+
 
 
 
